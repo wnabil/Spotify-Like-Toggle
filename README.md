@@ -59,16 +59,35 @@ You can download the prebuilt app for Windows from the latest release:
 
 ## Usage
 
-Start the app with:
+You can use the following npm scripts to run, package, and prepare the Windows build of **Spotify Like Toggle**:
 
+### Start the app (development mode)
 ```bash
 npm start
 ```
+- Runs the app in the system tray.
+- Open the **About** window or quit the app from the tray menu.
+- On first launch, the app will open a browser window to authorize Spotify.
 
-* The app will run in the system tray.
-* Open the **About** window or quit the app from the tray menu.
-* On first launch, the app will open a browser window to authorize Spotify.
+### Package the app for Windows
+```bash
+npm run package-win
+```
+- Uses `electron-packager` to build a Windows x64 executable in the `dist` folder.
+- Output folder: `dist/SpotifyLikeToggle-win32-x64`
 
+### Create a ZIP of the Windows build
+```bash
+npm run zip-win
+```
+- Runs `zip-dist.js` to generate `Spotify-Like-Toggle-Setup.zip` in the `dist` folder.
+
+### Build and ZIP the Windows version
+```bash
+npm run build-win
+```
+- Combines packaging and zipping in a single step.
+- Produces `dist/Spotify-Like-Toggle-Setup.zip` ready for distribution.
 ---
 
 ## Developer Info
