@@ -5,9 +5,15 @@
   "main": "main.js",
   "type": "commonjs",
   "author": "Wassem Keddah",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wnabil/Spotify-Like-Toggle.git"
+  },
   "scripts": {
     "start": "electron .",
-    "package-win": "electron-packager . SpotifyLikeToggle --platform=win32 --arch=x64 --out=dist --overwrite --icon=./icon.ico"
+    "package-win": "electron-packager . SpotifyLikeToggle --platform=win32 --arch=x64 --out=dist --overwrite --icon=./icon.ico",
+    "zip-win": "node zip-dist.js",
+    "build-win": "npm run package-win && npm run zip-win"
   },
   "dependencies": {
     "express": "^5.1.0",
@@ -15,10 +21,12 @@
     "node-global-key-listener": "^0.3.0",
     "node-notifier": "^10.0.1",
     "open": "^10.2.0",
-    "spotify-web-api-node": "^5.0.2"
+    "spotify-web-api-node": "^5.0.2",
+    "windows-shortcuts": "^0.1.6"
   },
   "devDependencies": {
     "electron": "^37.4.0",
-    "electron-packager": "^17.1.2"
+    "electron-packager": "^17.1.2",
+    "zip-folder": "^1.0.0"
   }
 }
