@@ -1,0 +1,8 @@
+# Ignore build output
+dist/
+
+# Ignore sensitive config
+config.ini
+
+# Optional: node_modules
+node_modules/
