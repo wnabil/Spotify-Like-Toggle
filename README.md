@@ -26,8 +26,8 @@
 1. Clone this repository:
 
 ```bash
-git clone <repo-url>
-cd <repo-folder>
+git clone https://github.com/wnabil/Spotify-Like-Toggle
+cd Spotify-Like-Toggle
 ```
 
 2. Install dependencies:
@@ -42,7 +42,7 @@ npm install
 [spotify]
 clientId = YOUR_SPOTIFY_CLIENT_ID
 clientSecret = YOUR_SPOTIFY_CLIENT_SECRET
-redirectUri = YOUR_REDIRECT_URI
+redirectUri = https://spotify.ok2code.com/callback # Or your domain redirection callback
 ```
 
 **Note:** The app will not run without a properly configured `config.ini`.
