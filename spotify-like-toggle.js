@@ -1,3 +1,9 @@
+/**
+ * @file spotify-like-toggle.js
+ * @description Handles Spotify authentication, token refresh, and global keyboard shortcuts
+ *              for adding/removing currently playing track to/from Liked Songs.
+ */
+
 const fs = require("fs");
 const path = require("path");
 const ini = require("ini");
@@ -7,28 +13,35 @@ const open = require("open").default;
 const notifier = require("node-notifier");
 const express = require("express");
 
+// Path to notification icon
 const iconPath = path.join(__dirname, "icon.png");
 
-// Read config.ini
+// --- Load config.ini ---
 const configPath = path.join(__dirname, "config.ini");
 if (!fs.existsSync(configPath)) throw new Error("config.ini not found!");
 
 const config = ini.parse(fs.readFileSync(configPath, "utf-8"));
 const { clientId, clientSecret, redirectUri } = config.spotify;
 
-// Spotify scopes
+// Spotify OAuth scopes required for this app
 const scopes = [
-  "user-library-modify",
-  "user-library-read",
-  "user-read-playback-state",
+  "user-library-modify", // Add/remove tracks to/from Liked Songs
+  "user-library-read",   // Check if track is already liked
+  "user-read-playback-state", // Get current playing track
 ];
 
-// --- Main function ---
+/**
+ * Main function: starts the Express server and handles Spotify OAuth flow.
+ */
 async function main() {
-  const port = 8888;
+  const port = 8888; // Local server port for Spotify redirect
   const spotifyApi = new SpotifyWebApi({ clientId, clientSecret, redirectUri });
   const app = express();
 
+  /**
+   * Spotify redirect callback endpoint.
+   * Exchanges authorization code for access and refresh tokens.
+   */
   app.get("/callback", async (req, res) => {
     const code = req.query.code;
     if (!code) return res.send("No code received.");
@@ -38,8 +51,9 @@ async function main() {
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
       console.log("Spotify authenticated! Hotkeys are active.");
-      startTokenRefresh(spotifyApi);
-      startHotkeyListener(spotifyApi);
+
+      startTokenRefresh(spotifyApi);    // Start periodic token refresh
+      startHotkeyListener(spotifyApi);  // Start global hotkey listener
 
       res.send(`
         <html>
@@ -59,11 +73,14 @@ async function main() {
     console.log(`Server listening on port ${port}`);
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, "state");
     console.log("Opening Spotify login page...");
-    open(authorizeURL);
+    open(authorizeURL); // Open Spotify OAuth in default browser
   });
 }
 
-// --- Token refresh ---
+/**
+ * Starts an interval to refresh Spotify access token periodically.
+ * @param {SpotifyWebApi} spotifyApi
+ */
 function startTokenRefresh(spotifyApi) {
   setInterval(async () => {
     try {
@@ -73,10 +90,13 @@ function startTokenRefresh(spotifyApi) {
     } catch (err) {
       console.error("Error refreshing token:", err.message);
     }
-  }, 1000 * 60 * 50);
+  }, 1000 * 60 * 50); // Refresh every 50 minutes
 }
 
-// --- Hotkey listener ---
+/**
+ * Starts global keyboard listener for hotkeys Ctrl+Alt+A and Ctrl+Alt+R
+ * @param {SpotifyWebApi} spotifyApi
+ */
 function startHotkeyListener(spotifyApi) {
   const listener = new GlobalKeyboardListener();
 
@@ -97,14 +117,14 @@ function startHotkeyListener(spotifyApi) {
         const songInfo = `${current.body.item.name} - ${current.body.item.artists.map(a => a.name).join(", ")}`;
         const isLiked = (await spotifyApi.containsMySavedTracks([trackId])).body[0];
 
-        if (key === "A") {
+        if (key === "A") { // Add track
           if (isLiked) {
             notifier.notify({ title: "Spotify Liked Toggle", message: `Already in Liked Songs:\n${songInfo}`, icon: iconPath });
           } else {
             await spotifyApi.addToMySavedTracks([trackId]);
             notifier.notify({ title: "Spotify Liked Toggle", message: `Added to Liked Songs:\n${songInfo}`, icon: iconPath });
           }
-        } else if (key === "R") {
+        } else if (key === "R") { // Remove track
           if (!isLiked) {
             notifier.notify({ title: "Spotify Liked Toggle", message: `Not in Liked Songs:\n${songInfo}`, icon: iconPath });
           } else {
@@ -123,4 +143,5 @@ function startHotkeyListener(spotifyApi) {
   console.log("  Ctrl+Alt+R → Remove current track from Liked Songs");
 }
 
+// Start the app
 main();
