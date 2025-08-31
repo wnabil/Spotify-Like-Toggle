@@ -93,7 +93,7 @@ npm run build-win
 ## Developer Info
 
 - **Name:** Wassem Keddah
-- **Email:** [wassemkeddah@gmail.com](mailto:wassemkeddah@gmail.com)
+- **Email:** [wassem@ok2code.com](mailto:wassem@ok2code.com)
 - **Company:** [OkToCode](https://ok2code.com)
 
 ---

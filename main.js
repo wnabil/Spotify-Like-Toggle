@@ -109,7 +109,7 @@ if (!singleLock) {
           </ul>
           <h2>Contact</h2>
           <ul>
-            <li>Email: <a href="mailto:wassemkeddah@gmail.com">(Wassem Keddah) wassemkeddah@gmail.com</a></li>
+            <li>Email: <a href="mailto:wassem@ok2code.com">(Wassem Keddah) wassem@ok2code.com</a></li>
             <li>Company: <a href="https://ok2code.com" target="_blank" rel="noreferrer">OkToCode (ok2code.com)</a></li>
           </ul>
           <div class="foot">© OkToCode</div>
