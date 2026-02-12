@@ -101,11 +101,14 @@ function startHotkeyListener(spotifyApi) {
   const listener = new GlobalKeyboardListener();
 
   listener.addListener(async (e, down) => {
+    // Only process on key down events
+    if (e.state !== "DOWN") return;
+
     const isCtrl = down["LEFT CTRL"] || down["RIGHT CTRL"];
     const isAlt = down["LEFT ALT"] || down["RIGHT ALT"];
     const key = e.name;
 
-    if (isCtrl && isAlt && down[key]) {
+    if (isCtrl && isAlt && (key === "A" || key === "R")) {
       try {
         const current = await spotifyApi.getMyCurrentPlayingTrack();
         if (!current.body?.item) {
